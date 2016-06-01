@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.Http;
-using TimeTracking.IdSrv.Extensions;
+using TimeTracking.DataAccess;
 using TimeTracking.IdSrv.Configuration;
+using TimeTracking.IdSrv.Extensions;
 
 namespace TimeTracking.IdSrv
 {
@@ -32,6 +34,19 @@ namespace TimeTracking.IdSrv
         public void ConfigureServices(IServiceCollection services)
         {
             var cert = new X509Certificate2(Path.Combine(_environment.ContentRootPath, "idsrv3test.pfx"), "idsrv3test");
+
+            var sqlConnectionString = Configuration["DataAccessPostgreSqlProvider:ConnectionString"];
+
+            services.AddDbContext<PostGreSqlDbContext>(options =>
+                options.UseNpgsql(
+                    sqlConnectionString,
+                    b => b.MigrationsAssembly("TimeTracking.IdSrv")
+                )
+            );
+
+            services.AddScoped<PostGreSqlDbContext>();
+
+
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var builder = services.AddIdentityServer(options =>

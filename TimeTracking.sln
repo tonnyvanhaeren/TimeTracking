@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\Examples\IdentityServer4-dev\global.json = ..\..\Examples\IdentityServer4-dev\global.json
 	EndProjectSection
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TimeTracking.General", "TimeTracking.General\TimeTracking.General.xproj", "{178E913F-1A40-404D-9DF3-2AF555442C4C}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TimeTracking.DataAccess", "TimeTracking.DataAccess\TimeTracking.DataAccess.xproj", "{22CFF952-2BEA-4BD7-AB47-47F5C3B7B814}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{39A8BDD6-C1AB-4F06-BF90-4DAA817A2970}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39A8BDD6-C1AB-4F06-BF90-4DAA817A2970}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39A8BDD6-C1AB-4F06-BF90-4DAA817A2970}.Release|Any CPU.Build.0 = Release|Any CPU
+		{178E913F-1A40-404D-9DF3-2AF555442C4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{178E913F-1A40-404D-9DF3-2AF555442C4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{178E913F-1A40-404D-9DF3-2AF555442C4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{178E913F-1A40-404D-9DF3-2AF555442C4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22CFF952-2BEA-4BD7-AB47-47F5C3B7B814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22CFF952-2BEA-4BD7-AB47-47F5C3B7B814}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22CFF952-2BEA-4BD7-AB47-47F5C3B7B814}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22CFF952-2BEA-4BD7-AB47-47F5C3B7B814}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
