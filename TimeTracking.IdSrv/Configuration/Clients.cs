@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace TimeTracking.IdSrv.Configuration { 
+namespace TimeTracking.IdSrv.configuration { 
     
     public class Clients
     {

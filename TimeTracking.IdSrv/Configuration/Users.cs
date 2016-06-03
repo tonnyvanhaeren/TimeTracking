@@ -4,7 +4,7 @@ using IdentityServer4.Core.Services.InMemory;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace TimeTracking.IdSrv.Configuration
+namespace TimeTracking.IdSrv.configuration
 {
     static class Users
     {

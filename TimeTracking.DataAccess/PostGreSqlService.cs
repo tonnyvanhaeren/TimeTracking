@@ -51,10 +51,6 @@ namespace TimeTracking.DataAccess
             return true;
         }
 
-
-
-
-
         /// <summary>
         /// Hash user password
         /// </summary>

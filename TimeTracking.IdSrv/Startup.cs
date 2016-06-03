@@ -8,8 +8,9 @@ using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using TimeTracking.DataAccess;
-using TimeTracking.IdSrv.Configuration;
+using TimeTracking.IdSrv.configuration;
 using TimeTracking.IdSrv.Extensions;
+using TimeTracking.IdSrv.Services.Interfaces;
 
 namespace TimeTracking.IdSrv
 {
@@ -17,25 +18,34 @@ namespace TimeTracking.IdSrv
     {
         private readonly IHostingEnvironment _environment;
 
+        public IConfigurationRoot configuration { get; }
+
         public Startup(IHostingEnvironment env)
         {
+            _environment = env;
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("config.json")
                 .AddEnvironmentVariables();
-            Configuration = builder.Build();
-            _environment = env;
-        }
 
-        public IConfigurationRoot Configuration { get; }
+            if (env.IsDevelopment())
+            {
+                // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
+                builder.AddUserSecrets();
+            }
+
+            configuration = builder.Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var cert = new X509Certificate2(Path.Combine(_environment.ContentRootPath, "idsrv3test.pfx"), "idsrv3test");
 
-            var sqlConnectionString = Configuration["DataAccessPostgreSqlProvider:ConnectionString"];
+            var sqlConnectionString = configuration["DataAccessPostgreSqlProvider:ConnectionString"];
 
             services.AddDbContext<PostGreSqlDbContext>(options =>
                 options.UseNpgsql(
@@ -45,8 +55,6 @@ namespace TimeTracking.IdSrv
             );
 
             services.AddScoped<PostGreSqlDbContext>();
-
-
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var builder = services.AddIdentityServer(options =>
@@ -68,18 +76,30 @@ namespace TimeTracking.IdSrv
                     razor.ViewLocationExpanders.Add(new UI.CustomViewLocationExpander());
                 });
             services.AddTransient<UI.Login.LoginService>();
+
+            //services.AddSingleton<IConfiguration>(configuration);
+            services.Configure<MailConfig>(configuration.GetSection("Mail"));
+
+            // Add application services.
+            services.AddTransient<IMailSender, AuthMessageSender>();
+            services.AddTransient<ISmsSender, AuthMessageSender>();
+            //services.AddTransient<FlashMessage>();
+            //services.AddTransient<PasswordHasher>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddConsole(configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+
+
             }
             else
             {
