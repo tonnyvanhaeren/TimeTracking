@@ -8,7 +8,11 @@ using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using TimeTracking.DataAccess;
+using TimeTracking.DataAccess.Interfaces;
+using TimeTracking.General.Helpers;
 using TimeTracking.IdSrv.configuration;
+using TimeTracking.IdSrv.Configuration;
+using TimeTracking.IdSrv.Database;
 using TimeTracking.IdSrv.Extensions;
 using TimeTracking.IdSrv.Services.Interfaces;
 
@@ -45,7 +49,7 @@ namespace TimeTracking.IdSrv
         {
             var cert = new X509Certificate2(Path.Combine(_environment.ContentRootPath, "idsrv3test.pfx"), "idsrv3test");
 
-            var sqlConnectionString = configuration["DataAccessPostgreSqlProvider:ConnectionString"];
+            var sqlConnectionString = configuration["Database:PostgreSqlConnection"];
 
             services.AddDbContext<PostGreSqlDbContext>(options =>
                 options.UseNpgsql(
@@ -77,15 +81,17 @@ namespace TimeTracking.IdSrv
                 });
             services.AddTransient<UI.Login.LoginService>();
 
-            //services.AddSingleton<IConfiguration>(configuration);
+            //sync config json files with config classes
             services.Configure<MailConfig>(configuration.GetSection("Mail"));
+            services.Configure<AdminConfig>(configuration.GetSection("Admin"));
 
             // Add application services.
             services.AddTransient<IMailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<PasswordHasher>();
+            services.AddTransient<IPostGreSqlService, PostGreSqlService>();
             //services.AddTransient<FlashMessage>();
-            //services.AddTransient<PasswordHasher>();
-
+ 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,15 +102,26 @@ namespace TimeTracking.IdSrv
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
-
-
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+                app.UseRuntimeInfoPage("/info");
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            
+            try
+            {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+                {
+                    serviceScope.ServiceProvider.GetService<PostGreSqlDbContext>();
+                    serviceScope.ServiceProvider.GetService<PasswordHasher>();
+                }
+            }
+            catch { }
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
@@ -117,6 +134,9 @@ namespace TimeTracking.IdSrv
 
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
+
+
+            SeedData.CreateAdminUser(app.ApplicationServices, configuration);
         }
     }
 }

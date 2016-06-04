@@ -13,7 +13,10 @@ namespace TimeTracking.General.Models
             ProviderId = Constants.Provider.Id;
             Subject = Guid.NewGuid().ToString();
             UserClaims = new List<UserClaim>();
+            DateCreated = DateTime.UtcNow;
         }
+
+        public DateTime DateCreated { get; set; }
 
         public string Subject { get; set; }
 

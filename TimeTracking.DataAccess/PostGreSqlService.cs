@@ -42,9 +42,9 @@ namespace TimeTracking.DataAccess
             return _context.Users.FirstOrDefault<User>(u => u.Subject == subject);
         }
 
-        public bool UserWithEmailExists(User user)
+        public bool UserWithEmailExists(string email)
         {
-            if (GetUserByEmail(user.Email) == null)
+            if (GetUserByEmail(email) == null)
             {
                 return false;
             }

@@ -3,9 +3,15 @@
     "UserName": "xxxx",
     "Password": "xxxx"
   },
-  "ConnectionStrings": {
+  "Database": {
     "MsSqlServerConnection": "Server=(localdb)\\mssqllocaldb;Database=aspnet-WebApplication1-3d6667bc-4e99-48f8-80e7-302a1c013e99;Trusted_Connection=True;MultipleActiveResultSets=true",
     "SqliteConnection": "Data Source=C:\\git\\damienbod\\AspNet5MultipleProject\\src\\DataAccessSqliteProvider\\dataeventrecords.sqlite",
     "PostgreSqlConnection": "User ID=xxx;Password=xxx;Host=localhost;Port=5432;Database=xxx;Pooling=true;"
+  },
+  "Admin": {
+    "GivenName": "xxxxxxxxxx",
+    "FamilyName": "xxxxxxxxx",
+    "Email": "xxx.xxx.xx@gmail.com",
+    "Password":  "xxx" 
   }
 }

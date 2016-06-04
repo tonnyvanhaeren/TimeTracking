@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using TimeTracking.DataAccess.Interfaces;
 using TimeTracking.IdSrv.Services.Interfaces;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,10 +11,12 @@ namespace TimeTracking.IdSrv.UI.Register
     public class RegisterController : Controller
     {
         private readonly IMailSender _mailSender;
+        private readonly IPostGreSqlService _service;
 
-        public RegisterController(IMailSender mailSender)
+        public RegisterController(IMailSender mailSender, IPostGreSqlService service)
         {
             _mailSender = mailSender;
+            _service = service;
         }
 
 
@@ -71,6 +74,12 @@ namespace TimeTracking.IdSrv.UI.Register
             //}
             //var result = await _userManager.ConfirmEmailAsync(user, code);
             return View();
+        }
+
+        //for RegisterViewModel data annotations [Remote("IsUserExists", "Account", ErrorMessage = "User with this email already in use")]
+        public JsonResult IsUserExists(string email)
+        {
+            return Json(!_service.UserWithEmailExists(email));
         }
 
     }

@@ -2,13 +2,13 @@
 
 namespace TimeTracking.DataAccess.Interfaces
 {
-    interface IPostGreSqlService
+    public interface IPostGreSqlService
     {
         void AddUser(User user, string password);
 
         User GetUserByEmail(string email);
 
-        bool UserWithEmailExists(User user);
+        bool UserWithEmailExists(string email);
 
         User GetUserBySubject(string subject);
     }
