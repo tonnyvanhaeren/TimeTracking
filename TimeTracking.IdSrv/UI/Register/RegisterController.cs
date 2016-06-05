@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TimeTracking.DataAccess.Interfaces;
+using TimeTracking.General.Models;
 using TimeTracking.IdSrv.Services.Interfaces;
-
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TimeTracking.IdSrv.UI.Register
 {
@@ -29,11 +28,15 @@ namespace TimeTracking.IdSrv.UI.Register
         [HttpPost(TimeTracking.General.Constants.RoutePaths.Register)]
         public async Task<IActionResult> Index(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            bool checkMailUnique = CheckMailUniqueness(model.Email);
+
+            //if model state is valid and the email is unique
+            if (ModelState.IsValid && checkMailUnique)
             {
                 //save user
 
                 //send confirmation mail
+
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
 
@@ -50,8 +53,18 @@ namespace TimeTracking.IdSrv.UI.Register
                 //show flash message
 
                 //redirect to home
+          
 
             }
+            
+            //if mail is not unique add error and return to view
+            if (!checkMailUnique)
+            {
+                User user = _service.GetUserByEmail(model.Email);
+                ModelState.AddModelError(string.Empty, $" Email is already in use by: {user.GivenName} - {user.FamilyName}");
+                return View(model);
+            }
+
 
             //var vm = new LoginViewModel(model);
             return View(model);
@@ -76,10 +89,9 @@ namespace TimeTracking.IdSrv.UI.Register
             return View();
         }
 
-        //for RegisterViewModel data annotations [Remote("IsUserExists", "Account", ErrorMessage = "User with this email already in use")]
-        public JsonResult IsUserExists(string email)
+        private bool CheckMailUniqueness(string email)
         {
-            return Json(!_service.UserWithEmailExists(email));
+            return _service.UserWithEmailIsUnique(email);
         }
 
     }

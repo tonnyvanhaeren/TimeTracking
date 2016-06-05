@@ -8,7 +8,7 @@ namespace TimeTracking.DataAccess.Interfaces
 
         User GetUserByEmail(string email);
 
-        bool UserWithEmailExists(string email);
+        bool UserWithEmailIsUnique(string email);
 
         User GetUserBySubject(string subject);
     }

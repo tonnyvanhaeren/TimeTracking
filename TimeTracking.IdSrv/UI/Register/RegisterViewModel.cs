@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace TimeTracking.IdSrv.UI.Register
@@ -16,8 +17,6 @@ namespace TimeTracking.IdSrv.UI.Register
 
         [Required]
         [EmailAddress]
-        //Todo: Email uniqueness validation 
-        //[Remote("IsUserExists", "Account", ErrorMessage = "User with this email already in use")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
