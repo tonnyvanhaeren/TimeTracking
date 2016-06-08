@@ -23,6 +23,7 @@ namespace TimeTracking.IdSrv.Database
                 var user = new User { Email = configuration["Admin:Email"],
                                       GivenName = configuration["Admin:GivenName"],
                                       FamilyName = configuration["Admin:FamilyName"],
+                                      Username = configuration["Admin:Email"],
                                       EmailConfirmed = true,
                                       Enabled = true};
 

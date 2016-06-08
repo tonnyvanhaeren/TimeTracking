@@ -11,5 +11,7 @@ namespace TimeTracking.DataAccess.Interfaces
         bool UserWithEmailIsUnique(string email);
 
         User GetUserBySubject(string subject);
+
+        void UpdateUser(User user);
     }
 }

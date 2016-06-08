@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MotleyFlash;
+using MotleyFlash.AspNetCore.MessageProviders;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using TimeTracking.DataAccess;
@@ -14,6 +16,7 @@ using TimeTracking.IdSrv.configuration;
 using TimeTracking.IdSrv.Configuration;
 using TimeTracking.IdSrv.Database;
 using TimeTracking.IdSrv.Extensions;
+using TimeTracking.IdSrv.Helpers;
 using TimeTracking.IdSrv.Services.Interfaces;
 
 namespace TimeTracking.IdSrv
@@ -64,6 +67,8 @@ namespace TimeTracking.IdSrv
             var builder = services.AddIdentityServer(options =>
             {
                 options.SigningCertificate = cert;
+                options.SiteName = "Time Tracking Identity Server";
+                
             });
 
             builder.AddInMemoryClients(Clients.Get());
@@ -71,6 +76,31 @@ namespace TimeTracking.IdSrv
             builder.AddInMemoryUsers(Users.Get());
 
             builder.AddCustomGrantValidator<CustomGrantValidator>();
+
+
+            services.AddSession();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // Use this section if you want to leverage session.
+            services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Session);
+            services.AddScoped<IMessageProvider, SessionMessageProvider>();
+
+            // Use this section if you want to leverage cookies.
+            //services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.Cookies);
+            //services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Response.Cookies);
+            //services.AddScoped<IMessageProvider, CookieMessageProvider>();
+
+            services.AddScoped<IMessageTypes>(x =>
+            {
+                return new MessageTypes(error: "danger");
+            });
+
+            services.AddScoped<IMessengerOptions, MessengerOptions>();
+            services.AddScoped<IMessenger, StackMessenger>();
+
+
+
 
             // for the UI
             services
@@ -90,7 +120,9 @@ namespace TimeTracking.IdSrv
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<PasswordHasher>();
             services.AddTransient<IPostGreSqlService, PostGreSqlService>();
-            //services.AddTransient<FlashMessage>();
+            services.AddDataProtection();
+            services.AddTransient<ConfirmationToken>();
+            services.AddTransient<FlashMessage>();
  
         }
 
@@ -102,7 +134,7 @@ namespace TimeTracking.IdSrv
 
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseRuntimeInfoPage("/info");
@@ -133,8 +165,10 @@ namespace TimeTracking.IdSrv
             app.UseIdentityServer();
 
             app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
 
+            app.UseSession();
+
+            app.UseMvcWithDefaultRoute();
 
             SeedData.CreateAdminUser(app.ApplicationServices, configuration);
         }

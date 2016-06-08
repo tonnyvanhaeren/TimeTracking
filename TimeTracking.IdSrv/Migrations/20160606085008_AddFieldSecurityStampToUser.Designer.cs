@@ -8,9 +8,10 @@ using TimeTracking.DataAccess;
 namespace TimeTracking.IdSrv.Migrations
 {
     [DbContext(typeof(PostGreSqlDbContext))]
-    partial class PostGreSqlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160606085008_AddFieldSecurityStampToUser")]
+    partial class AddFieldSecurityStampToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rc2-20901");

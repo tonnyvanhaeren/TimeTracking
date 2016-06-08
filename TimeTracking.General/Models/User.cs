@@ -14,11 +14,14 @@ namespace TimeTracking.General.Models
             Subject = Guid.NewGuid().ToString();
             UserClaims = new List<UserClaim>();
             DateCreated = DateTime.UtcNow;
+            SecurityStamp = Guid.NewGuid().ToString();
         }
 
         public DateTime DateCreated { get; set; }
 
         public string Subject { get; set; }
+
+        public string SecurityStamp { get; set; }
 
         public string GivenName { get; set; }
 

@@ -42,6 +42,12 @@ namespace TimeTracking.DataAccess
             return _context.Users.FirstOrDefault<User>(u => u.Subject == subject);
         }
 
+        public void UpdateUser(User user)
+        {
+            _context.Update<User>(user);
+            _context.SaveChanges();
+        }
+
         public bool UserWithEmailIsUnique(string email)
         {
             if (GetUserByEmail(email) == null)
