@@ -17,6 +17,8 @@ namespace TimeTracking.DataAccess
  
         public DbSet<UserClaim> UserClaims { get; set; }
 
+        public DbSet<Claim> Claims  { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<User>().HasKey(u => u.Subject);

@@ -34,6 +34,7 @@ namespace TimeTracking.IdSrv.UI.Register
         }
 
         [HttpPost(TimeTracking.General.Constants.RoutePaths.Register)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(RegisterViewModel model, string returnUrl)
         {
             ViewData["ReturnUrl"] = returnUrl;

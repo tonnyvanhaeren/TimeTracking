@@ -14,6 +14,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TimeTracking.General", "Tim
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TimeTracking.DataAccess", "TimeTracking.DataAccess\TimeTracking.DataAccess.xproj", "{22CFF952-2BEA-4BD7-AB47-47F5C3B7B814}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TimeTracking.Web", "TimeTracking.Web\TimeTracking.Web.xproj", "{B46FFCD3-7D7D-4FFC-AAE4-23B3B5FD2EF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{22CFF952-2BEA-4BD7-AB47-47F5C3B7B814}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22CFF952-2BEA-4BD7-AB47-47F5C3B7B814}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22CFF952-2BEA-4BD7-AB47-47F5C3B7B814}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B46FFCD3-7D7D-4FFC-AAE4-23B3B5FD2EF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B46FFCD3-7D7D-4FFC-AAE4-23B3B5FD2EF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B46FFCD3-7D7D-4FFC-AAE4-23B3B5FD2EF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B46FFCD3-7D7D-4FFC-AAE4-23B3B5FD2EF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
