@@ -6,7 +6,7 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>b46ffcd3-7d7d-4ffc-aae4-23b3b5fd2ef9</ProjectGuid>
+    <ProjectGuid>ba91f543-9f0a-4936-943f-ee00db5111ad</ProjectGuid>
     <RootNamespace>TimeTracking.Web</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>

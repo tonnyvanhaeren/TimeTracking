@@ -1,72 +1,98 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MotleyFlash;
+using MotleyFlash.AspNetCore.MessageProviders;
+using TimeTracking.DataAccess;
+using TimeTracking.DataAccess.Interfaces;
+using TimeTracking.General.Helpers;
 using TimeTracking.Web.Config;
-using TimeTracking.Web.Data;
-using TimeTracking.Web.Models;
+using TimeTracking.Web.Helpers;
 using TimeTracking.Web.Services;
-
+using TimeTracking.Web.Services.Interfaces;
 
 namespace TimeTracking.Web
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _environment;
-
         public IConfigurationRoot Configuration { get; }
- 
 
         public Startup(IHostingEnvironment env)
         {
-            _environment = env;
-
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddJsonFile("config.json")
                 .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
             {
-                // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
             }
 
             Configuration = builder.Build();
         }
 
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            var sqlConnectionString = Configuration["Database:PostgreSqlConnection"];
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(o => {
+            services.AddDbContext<PostGreSqlDbContext>(options =>
+                options.UseNpgsql(
+                    sqlConnectionString,
+                    b => b.MigrationsAssembly("TimeTracking.Web")
+                )
+            );
 
-                o.Password.RequireDigit = false;
-                o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = false;
-                o.Password.RequiredLength = 8;
-            })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+
+            services.AddTransient<PasswordHasher>();
+            services.AddScoped<PostGreSqlDbContext>();
+            services.AddTransient<IPostGreSqlService, PostGreSqlService>();
+
 
             //sync config json files with config classes
             services.Configure<MailConfig>(Configuration.GetSection("Mail"));
             services.Configure<AdminConfig>(Configuration.GetSection("Admin"));
 
-            services.AddMvc();
-
             // Add application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
+            services.AddTransient<IMailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<PasswordHasher>();
+            services.AddTransient<IPostGreSqlService, PostGreSqlService>();
+            services.AddDataProtection();
+            services.AddTransient<ConfirmationToken>();
+            services.AddTransient<FlashMessage>();
+
+
+            services.AddSession();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // Use this section if you want to leverage session.
+            services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Session);
+            services.AddScoped<IMessageProvider, SessionMessageProvider>();
+
+            // Use this section if you want to leverage cookies.
+            //services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.Cookies);
+            //services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Response.Cookies);
+            //services.AddScoped<IMessageProvider, CookieMessageProvider>();
+
+            services.AddScoped<IMessageTypes>(x =>
+            {
+                return new MessageTypes(error: "danger");
+            });
+
+            services.AddScoped<IMessengerOptions, MessengerOptions>();
+            services.AddScoped<IMessenger, StackMessenger>();
+
+            // Add framework services.
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,7 +104,6 @@ namespace TimeTracking.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
             else
@@ -86,11 +111,21 @@ namespace TimeTracking.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
+
+            try
+            {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+                {
+                    serviceScope.ServiceProvider.GetService<PostGreSqlDbContext>();
+                    serviceScope.ServiceProvider.GetService<PasswordHasher>();
+                }
+            }
+            catch { }
+
             app.UseStaticFiles();
 
-            app.UseIdentity();
-
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
+            app.UseSession();
 
             app.UseMvc(routes =>
             {
@@ -98,6 +133,8 @@ namespace TimeTracking.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            SeedData.CreateAdminAppUser(app.ApplicationServices, Configuration);
         }
     }
 }

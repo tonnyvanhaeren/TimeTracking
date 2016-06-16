@@ -7,6 +7,12 @@ namespace TimeTracking.General
 {
     public static class Constants
     {
+        public static class AppUserPolicyType
+        {
+            public const string Role = "role";
+            public const string Regular = "regular";
+        }
+
         public static class RoutePaths
         {
             public const string Register = "ui/register";

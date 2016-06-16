@@ -14,7 +14,7 @@ namespace TimeTracking.General.Helpers
             _protector = provider.CreateProtector("TimeTracking.General.Token");
         }
 
-        public string Generate(string purpose,  User user)
+        public string Generate(string purpose,  AppUser user)
         {
             if (user == null)
             {
@@ -33,7 +33,7 @@ namespace TimeTracking.General.Helpers
             return Convert.ToBase64String(protectedBytes);
         }
 
-        public bool ValidateToken(string purpose, string token, User user)
+        public bool ValidateToken(string purpose, string token, AppUser user)
         {
 
             var unprotectedData = _protector.Unprotect(Convert.FromBase64String(token));

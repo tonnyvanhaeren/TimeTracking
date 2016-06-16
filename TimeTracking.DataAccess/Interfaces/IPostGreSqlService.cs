@@ -4,14 +4,17 @@ namespace TimeTracking.DataAccess.Interfaces
 {
     public interface IPostGreSqlService
     {
-        void AddUser(User user, string password);
+        void AddAppUser(AppUser appUser, string password);
 
-        User GetUserByEmail(string email);
+        AppUser GetAppUserByEmail(string email);
 
-        bool UserWithEmailIsUnique(string email);
+        bool AppUserWithEmailIsUnique(string email);
 
-        User GetUserBySubject(string subject);
+        AppUser GetAppUserBySubject(string subject);
 
-        void UpdateUser(User user);
+        void UpdateAppUser(AppUser appUser);
+
+        void AddPolicyToAppUser(AppUser appUser, string type, string name);
+
     }
 }

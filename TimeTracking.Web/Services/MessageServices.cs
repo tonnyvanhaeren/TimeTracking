@@ -1,25 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
+using MimeKit;
+using System;
 using System.Threading.Tasks;
+using TimeTracking.Web.Config;
+using TimeTracking.Web.Services.Interfaces;
 
 namespace TimeTracking.Web.Services
 {
-    // This class is used by the application to send Email and SMS
-    // when you turn on two-factor authentication in ASP.NET Identity.
-    // For more details see this link http://go.microsoft.com/fwlink/?LinkID=532713
-    public class AuthMessageSender : IEmailSender, ISmsSender
+    public class AuthMessageSender : IMailSender, ISmsSender
     {
-        public Task SendEmailAsync(string email, string subject, string message)
+        public MailConfig _mailConfig { get; private set; }
+
+        public AuthMessageSender(IOptions<MailConfig> mailConfig)
+        {
+            _mailConfig = mailConfig.Value;
+        }
+
+        public Task SendEmailAsync(string email, string subject, string msg)
         {
             // Plug in your email service here to send an email.
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Tonny Web Site", _mailConfig.UserName));
+            message.To.Add(new MailboxAddress("User", email));
+            message.Subject = subject;
+
+            var bodyBuilder = new BodyBuilder();
+            bodyBuilder.HtmlBody = msg;
+            message.Body = bodyBuilder.ToMessageBody();
+
+            using (var client = new SmtpClient())
+            {
+
+                client.Connect("smtp.gmail.com", 587); //Gmail
+
+                client.AuthenticationMechanisms.Remove("XOAUTH2");
+
+                // Note: only needed if the SMTP server requires authentication
+                client.Authenticate(_mailConfig.UserName, _mailConfig.Password);
+
+                client.Send(message);
+                client.Disconnect(true);
+            }
+
             return Task.FromResult(0);
         }
 
         public Task SendSmsAsync(string number, string message)
         {
-            // Plug in your SMS service here to send a text message.
-            return Task.FromResult(0);
+            throw new NotImplementedException();
         }
     }
 }

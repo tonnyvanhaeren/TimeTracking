@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-using System.Security.Claims;
 using TimeTracking.General.Models;
 
 namespace TimeTracking.DataAccess
@@ -12,29 +11,24 @@ namespace TimeTracking.DataAccess
         {
         }
 
-        public DbSet<User> Users { get; set; }
-
+        public DbSet<AppUser> AppUsers { get; set; }
  
-        public DbSet<UserClaim> UserClaims { get; set; }
+        public DbSet<AppUserPolicy> AppUserPolicies { get; set; }
 
-        public DbSet<Claim> Claims  { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<User>().HasKey(u => u.Subject);
-            builder.Entity<User>().HasIndex(u => u.Subject);
+            builder.Entity<AppUser>().HasKey(u => u.Subject);
+            builder.Entity<AppUser>().HasIndex(u => u.Subject);
+            builder.Entity<AppUser>().HasIndex(u => u.Email).IsUnique(); //Set unique index on mail field
 
-            //Set unique index on mail field
-            builder.Entity<User>().HasIndex(u => u.Email).IsUnique();
-
-            builder.Entity<UserClaim>().HasKey(r => r.Id);
-            builder.Entity<UserClaim>().HasIndex(r => r.Id);
-            builder.Entity<UserClaim>().HasIndex(c => c.Subject); //
+            builder.Entity<AppUserPolicy>().HasKey(p => p.Id);
+            builder.Entity<AppUserPolicy>().HasIndex(p => p.Id);
+            builder.Entity<AppUserPolicy>().HasIndex(p => p.Subject);
 
             // shadow properties
-            builder.Entity<User>().Property<DateTime>("UpdatedTimestamp");
-            builder.Entity<UserClaim>().Property<DateTime>("UpdatedTimestamp");
-
+            builder.Entity<AppUser>().Property<DateTime>("UpdatedTimestamp");
+            builder.Entity<AppUserPolicy>().Property<DateTime>("UpdatedTimestamp");
 
             base.OnModelCreating(builder);
         }
@@ -43,8 +37,8 @@ namespace TimeTracking.DataAccess
         {
             ChangeTracker.DetectChanges();
 
-            updateUpdatedProperty<User>();
-            updateUpdatedProperty<UserClaim>();
+            updateUpdatedProperty<AppUser>();
+            updateUpdatedProperty<AppUserPolicy>();
 
             return base.SaveChanges();
         }

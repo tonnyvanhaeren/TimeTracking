@@ -14,7 +14,6 @@ using TimeTracking.DataAccess.Interfaces;
 using TimeTracking.General.Helpers;
 using TimeTracking.IdSrv.configuration;
 using TimeTracking.IdSrv.Configuration;
-using TimeTracking.IdSrv.Database;
 using TimeTracking.IdSrv.Extensions;
 using TimeTracking.IdSrv.Helpers;
 using TimeTracking.IdSrv.Services.Interfaces;
@@ -99,9 +98,6 @@ namespace TimeTracking.IdSrv
             services.AddScoped<IMessengerOptions, MessengerOptions>();
             services.AddScoped<IMessenger, StackMessenger>();
 
-
-
-
             // for the UI
             services
                 .AddMvc()
@@ -122,7 +118,7 @@ namespace TimeTracking.IdSrv
             services.AddTransient<IPostGreSqlService, PostGreSqlService>();
             services.AddDataProtection();
             services.AddTransient<ConfirmationToken>();
-            services.AddTransient<FlashMessage>();
+            //services.AddTransient<FlashMessage>();
  
         }
 
@@ -170,7 +166,7 @@ namespace TimeTracking.IdSrv
 
             app.UseMvcWithDefaultRoute();
 
-            SeedData.CreateAdminUser(app.ApplicationServices, configuration);
+            //SeedData.CreateAdminUser(app.ApplicationServices, configuration);
         }
     }
 }
