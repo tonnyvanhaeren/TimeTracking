@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TimeTracking.DataAccess.Interfaces;
 using TimeTracking.General.Helpers;
@@ -31,10 +33,16 @@ namespace TimeTracking.DataAccess
             _context.SaveChangesAsync();
         }
 
+        public bool VerifyAppUserPassword(AppUser user, string plainPassword)
+        {
+            return VerifyPassword(user, plainPassword);
+        }
+
         public AppUser GetAppUserByEmail(string email)
         {
-            return _context.AppUsers.FirstOrDefault<AppUser>(u => u.Email == email);
 
+
+            return _context.AppUsers.FirstOrDefault<AppUser>(u => u.Email == email);
         }
 
         public AppUser GetAppUserBySubject(string subject)
@@ -87,6 +95,29 @@ namespace TimeTracking.DataAccess
 
             _context.AppUserPolicies.Add(policy);
             _context.SaveChanges();
+        }
+
+        public List<AppUser> GetAllAppUsers()
+        {
+            return _context.AppUsers.ToList<AppUser>();
+        }
+
+        public List<AppUserPolicy> GetAllAppUserPolicies(string subject)
+        {
+            return _context.AppUserPolicies.Where<AppUserPolicy>(a => a.Subject == subject).ToList();
+        }
+
+        public bool VerifyAppUserPasswordByMail(string email, string plainPassword)
+        {
+            var user = GetAppUserByEmail(email);
+            if (user == null)
+            {
+                return false;
+            }
+            else
+            {
+                return VerifyAppUserPassword(user, plainPassword);
+            }
         }
     }
 }

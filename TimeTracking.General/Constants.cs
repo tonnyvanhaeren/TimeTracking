@@ -7,6 +7,20 @@ namespace TimeTracking.General
 {
     public static class Constants
     {
+        public static class MvcClient
+        {
+            public const string ClientUrl = "http://localhost:50000";
+            public const string ClientUrlLogOffEndPoint = "http://localhost:50000/Account/logOffMsg";
+            public const string ClientEndPoint = "http://localhost:50000/signin-oidc";
+        }
+
+        public static class Idsrv
+        {
+            public const string IdSrvUrl = "http://localhost:60000/";
+            public const string IdSrvLogOutUrl = IdSrvUrl + "ui/ExternalLogOut";
+        }
+
+
         public static class AppUserPolicyType
         {
             public const string Role = "role";
@@ -16,6 +30,7 @@ namespace TimeTracking.General
         public static class RoutePaths
         {
             public const string Register = "ui/register";
+            public const string ExternalLogOut = "ui/externalLogout";
             //public const string Consent = "ui/consent";
             //public const string CspReport = "csp/report";
             //public const string Error = "ui/error";

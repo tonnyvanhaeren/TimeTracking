@@ -33,5 +33,16 @@ namespace TimeTracking.IdSrv.UI.Logout
             var vm = new LoggedOutViewModel();
             return View("LoggedOut", vm);
         }
+
+        [HttpGet(General.Constants.RoutePaths.ExternalLogOut)]
+        public async Task<IActionResult> ExternalLogout(string returnUrl)
+        {
+            await HttpContext.Authentication.SignOutAsync(Constants.PrimaryAuthenticationType);
+
+            // set this so UI rendering sees an anonymous user
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
+            return Redirect(returnUrl);
+        }
     }
 }

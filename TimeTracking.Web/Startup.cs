@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MotleyFlash;
 using MotleyFlash.AspNetCore.MessageProviders;
+using System.IdentityModel.Tokens.Jwt;
 using TimeTracking.DataAccess;
 using TimeTracking.DataAccess.Interfaces;
 using TimeTracking.General.Helpers;
@@ -51,9 +52,9 @@ namespace TimeTracking.Web
             );
 
 
-            services.AddTransient<PasswordHasher>();
+            //services.AddTransient<PasswordHasher>();
             services.AddScoped<PostGreSqlDbContext>();
-            services.AddTransient<IPostGreSqlService, PostGreSqlService>();
+            //services.AddTransient<IPostGreSqlService, PostGreSqlService>();
 
 
             //sync config json files with config classes
@@ -85,7 +86,7 @@ namespace TimeTracking.Web
 
             services.AddScoped<IMessageTypes>(x =>
             {
-                return new MessageTypes(error: "danger");
+                return new MessageTypes(error: "danger", information: "info");
             });
 
             services.AddScoped<IMessengerOptions, MessengerOptions>();
@@ -96,7 +97,7 @@ namespace TimeTracking.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -122,10 +123,60 @@ namespace TimeTracking.Web
                 }
             }
             catch { }
-
+            
             app.UseStaticFiles();
 
             app.UseSession();
+
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions {
+                AuthenticationScheme = "cookies",
+                AutomaticAuthenticate = true
+
+            });
+
+            //options =>
+            //{
+            //    options.AuthenticationScheme = "cookies";
+            //    options.AutomaticAuthenticate = true;
+            //});
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions {
+                AuthenticationScheme = "oidc",
+                SignInScheme = "cookies",
+                AutomaticChallenge = true,
+                Authority = General.Constants.Idsrv.IdSrvUrl,
+                RequireHttpsMetadata = false,
+                ClientId = "mvc_implicit",
+                ResponseType = "id_token token" , // OpenIdConnectResponseTypes.IdToken,  "id_token token" 
+                TokenValidationParameters = {  NameClaimType = "name", RoleClaimType = "role" },
+                Scope = { "email", "roles", "api1" },
+            });
+            
+            
+            //options =>
+            //{
+            //    options.AuthenticationScheme = "oidc";
+            //    options.SignInScheme = "cookies";
+            //    options.AutomaticChallenge = true;
+
+            //    options.Authority = "http://localhost:22530/";
+            //    options.RequireHttpsMetadata = false;
+
+            //    options.ClientId = "mvc_implicit";
+            //    options.ResponseType = "id_token token";
+
+            //    //options.Scope.Add("profile");
+            //    options.Scope.Add("email");
+            //    options.Scope.Add("roles");
+            //    options.Scope.Add("api1");
+
+            //    options.TokenValidationParameters.NameClaimType = "name";
+            //    options.TokenValidationParameters.RoleClaimType = "role";
+            //});
+
 
             app.UseMvc(routes =>
             {

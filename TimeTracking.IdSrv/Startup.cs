@@ -1,22 +1,19 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using IdentityServer4.Core.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MotleyFlash;
-using MotleyFlash.AspNetCore.MessageProviders;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using TimeTracking.DataAccess;
 using TimeTracking.DataAccess.Interfaces;
 using TimeTracking.General.Helpers;
 using TimeTracking.IdSrv.configuration;
-using TimeTracking.IdSrv.Configuration;
 using TimeTracking.IdSrv.Extensions;
-using TimeTracking.IdSrv.Helpers;
-using TimeTracking.IdSrv.Services.Interfaces;
+using TimeTracking.IdSrv.Services;
 
 namespace TimeTracking.IdSrv
 {
@@ -55,8 +52,7 @@ namespace TimeTracking.IdSrv
 
             services.AddDbContext<PostGreSqlDbContext>(options =>
                 options.UseNpgsql(
-                    sqlConnectionString,
-                    b => b.MigrationsAssembly("TimeTracking.IdSrv")
+                    sqlConnectionString //,  b => b.MigrationsAssembly("TimeTracking.IdSrv")
                 )
             );
 
@@ -72,31 +68,49 @@ namespace TimeTracking.IdSrv
 
             builder.AddInMemoryClients(Clients.Get());
             builder.AddInMemoryScopes(Scopes.Get());
-            builder.AddInMemoryUsers(Users.Get());
+            //builder.AddInMemoryUsers(Users.Get());
 
-            builder.AddCustomGrantValidator<CustomGrantValidator>();
+            
 
 
-            services.AddSession();
+            //services.AddSession();
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Use this section if you want to leverage session.
-            services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Session);
-            services.AddScoped<IMessageProvider, SessionMessageProvider>();
+            //services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Session);
+            //services.AddScoped<IMessageProvider, SessionMessageProvider>();
 
             // Use this section if you want to leverage cookies.
             //services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.Cookies);
             //services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Response.Cookies);
             //services.AddScoped<IMessageProvider, CookieMessageProvider>();
 
-            services.AddScoped<IMessageTypes>(x =>
-            {
-                return new MessageTypes(error: "danger");
-            });
+            //services.AddScoped<IMessageTypes>(x =>
+            //{
+            //    return new MessageTypes(error: "danger");
+            //});
 
-            services.AddScoped<IMessengerOptions, MessengerOptions>();
-            services.AddScoped<IMessenger, StackMessenger>();
+            //services.AddScoped<IMessengerOptions, MessengerOptions>();
+            //services.AddScoped<IMessenger, StackMessenger>();
+
+
+            //sync config json files with config classes
+            //services.Configure<MailConfig>(configuration.GetSection("Mail"));
+            //services.Configure<AdminConfig>(configuration.GetSection("Admin"));
+
+            // Add application services.
+            //services.AddTransient<IMailSender, AuthMessageSender>();
+            //services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<PasswordHasher>();
+            services.AddTransient<IPostGreSqlService, PostGreSqlService>();
+            builder.Services.AddTransient<IProfileService, PostGreSqlProfileService>();
+            services.AddDataProtection();
+            builder.AddCustomGrantValidator<CustomGrantValidator>();
+
+
+            //services.AddTransient<ConfirmationToken>();
+            //services.AddTransient<FlashMessage>();
 
             // for the UI
             services
@@ -105,21 +119,10 @@ namespace TimeTracking.IdSrv
                 {
                     razor.ViewLocationExpanders.Add(new UI.CustomViewLocationExpander());
                 });
-            services.AddTransient<UI.Login.LoginService>();
+            //services.AddTransient<UI.Login.LoginService>();
+            services.AddTransient<UI.Login.PostGreSqlLoginService>();
 
-            //sync config json files with config classes
-            services.Configure<MailConfig>(configuration.GetSection("Mail"));
-            services.Configure<AdminConfig>(configuration.GetSection("Admin"));
 
-            // Add application services.
-            services.AddTransient<IMailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddTransient<PasswordHasher>();
-            services.AddTransient<IPostGreSqlService, PostGreSqlService>();
-            services.AddDataProtection();
-            services.AddTransient<ConfirmationToken>();
-            //services.AddTransient<FlashMessage>();
- 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -140,16 +143,16 @@ namespace TimeTracking.IdSrv
                 app.UseExceptionHandler("/Home/Error");
             }
             
-            try
-            {
-                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                .CreateScope())
-                {
-                    serviceScope.ServiceProvider.GetService<PostGreSqlDbContext>();
-                    serviceScope.ServiceProvider.GetService<PasswordHasher>();
-                }
-            }
-            catch { }
+            //try
+            //{
+            //    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+            //    .CreateScope())
+            //    {
+            //        serviceScope.ServiceProvider.GetService<PostGreSqlDbContext>();
+            //        serviceScope.ServiceProvider.GetService<PasswordHasher>();
+            //    }
+            //}
+            //catch { }
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
@@ -162,7 +165,7 @@ namespace TimeTracking.IdSrv
 
             app.UseStaticFiles();
 
-            app.UseSession();
+            //app.UseSession();
 
             app.UseMvcWithDefaultRoute();
 

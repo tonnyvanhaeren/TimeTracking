@@ -4,10 +4,9 @@ using MimeKit;
 using System;
 using System.Threading.Tasks;
 using TimeTracking.IdSrv.configuration;
+using TimeTracking.IdSrv.Services.Interfaces;
 
-
-
-namespace TimeTracking.IdSrv.Services.Interfaces
+namespace TimeTracking.IdSrv.Services
 {
     public class AuthMessageSender : IMailSender, ISmsSender
     {

@@ -86,7 +86,8 @@ namespace TimeTracking.IdSrv.configuration {
                     AllowAccessTokensViaBrowser = true,
                     RedirectUris = new List<string>
                     {
-                        "http://localhost:3105/signin-oidc" // localhost:ipadress/signin-oidc
+                        //"hhhh://localhost:3105/signin-oidc" // localhost:ipadress/signin-oidc
+                        General.Constants.MvcClient.ClientEndPoint 
                     },
 
                     AllowedScopes = new List<string>

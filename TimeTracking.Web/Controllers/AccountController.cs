@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TimeTracking.DataAccess.Interfaces;
 using TimeTracking.General;
@@ -9,7 +10,7 @@ using TimeTracking.General.Models;
 using TimeTracking.Web.Helpers;
 using TimeTracking.Web.Services.Interfaces;
 using TimeTracking.Web.Views;
-
+using TimeTracking.Web.Views.Account;
 
 namespace TimeTracking.Web.Controllers
 {
@@ -28,10 +29,37 @@ namespace TimeTracking.Web.Controllers
             _flash = flash;
         }
 
+        [Authorize]
+        public IActionResult Login()
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> LogOff()
+        {
+            await HttpContext.Authentication.SignOutAsync("cookies");
+            return Redirect(General.Constants.Idsrv.IdSrvLogOutUrl + $"?returnUrl={General.Constants.MvcClient.ClientUrlLogOffEndPoint}"); //go to indentity server logout
+        }
+
+        public IActionResult LogOffMsg()
+        {
+            //show flashmessage
+            _flash.ShowInfoMessage("You are logged Out", "Log Off Information:");
+            return RedirectToAction("Index", "Home");
+        }
+
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+
+            //AppUser user = _service.GetAppUserByEmail("antonius.vanhaeren.av@gmail.com");
+
+            AppUser user = _service.GetAppUserByEmail("antonius.vanhaeren.av@gmail.com");
+            List<AppUserPolicy> policies = _service.GetAllAppUserPolicies(user.Subject);
+            AppUserViewModelView vmv = new AppUserViewModelView(user, policies);
+            return View(vmv);
         }
 
 

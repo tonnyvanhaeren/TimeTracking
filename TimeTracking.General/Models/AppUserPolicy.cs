@@ -7,6 +7,11 @@ namespace TimeTracking.General.Models
 {
     public class AppUserPolicy
     {
+        public AppUserPolicy()
+        {
+
+        }
+
         public AppUserPolicy(string sub)
         {
             this.Subject = sub;

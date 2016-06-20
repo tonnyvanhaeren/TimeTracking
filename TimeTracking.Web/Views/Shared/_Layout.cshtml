@@ -6,7 +6,8 @@
     <title>@ViewData["Title"] - TimeTracking.Web</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-Slate.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment names="Staging,Production">
@@ -33,8 +34,12 @@
                     <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-controller="Account" asp-action="Register">Register</a></li>
+                    <li><a asp-controller="Home" asp-action="Secure">Secure</a></li>
+                    @*<li><a asp-controller="Account" asp-action="Register">Register</a></li>*@
                 </ul>
+
+                @await Html.PartialAsync("_RegisterPartial")
+
             </div>
         </div>
     </div>

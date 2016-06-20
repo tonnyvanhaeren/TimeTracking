@@ -1,10 +1,15 @@
-﻿using TimeTracking.General.Models;
+﻿using System.Collections.Generic;
+using TimeTracking.General.Models;
 
 namespace TimeTracking.DataAccess.Interfaces
 {
     public interface IPostGreSqlService
     {
         void AddAppUser(AppUser appUser, string password);
+
+        bool VerifyAppUserPassword(AppUser appUser, string plainPassword);
+
+        bool VerifyAppUserPasswordByMail(string email, string plainPassword);
 
         AppUser GetAppUserByEmail(string email);
 
@@ -15,6 +20,10 @@ namespace TimeTracking.DataAccess.Interfaces
         void UpdateAppUser(AppUser appUser);
 
         void AddPolicyToAppUser(AppUser appUser, string type, string name);
+
+        List<AppUser> GetAllAppUsers();
+
+        List<AppUserPolicy> GetAllAppUserPolicies(string subject);
 
     }
 }
