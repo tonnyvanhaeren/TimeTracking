@@ -15,6 +15,17 @@ namespace TimeTracking.IdSrv.configuration
                 StandardScopes.OfflineAccess,
                 StandardScopes.RolesAlwaysInclude,
 
+                new Scope {
+                    Name = "timeTrackingAPI",
+                    Description = "API for the Time Tracking resources",
+                    Type = ScopeType.Resource,
+                    ScopeSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256()) //todo: created secret
+                    },
+                    
+                },
+
                 new Scope
                 {
                     Name = "api1",

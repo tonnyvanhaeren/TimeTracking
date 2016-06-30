@@ -5,18 +5,20 @@ namespace TimeTracking.Web.Controllers
 {
     public class HomeController : Controller
     {
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
         }
 
-
-        [Authorize]
+        //[Authorize]
         public  IActionResult Secure()
         {
             return View();
         }
 
+
+        [AllowAnonymous]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -24,6 +26,7 @@ namespace TimeTracking.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -31,6 +34,7 @@ namespace TimeTracking.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult Error()
         {
             return View();

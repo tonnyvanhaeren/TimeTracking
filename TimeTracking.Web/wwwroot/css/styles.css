@@ -1,0 +1,408 @@
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+}
+
+
+@media (min-width:768px) {
+    .back-to-top,
+    .bs-docs-theme-toggle {
+        display: block
+    }
+}
+
+
+/*#3a3f44 #3a3f44*/
+.navbar{
+  border-bottom: solid #272b30 15px; 
+}
+
+@media (min-width: 1200px) {
+/* Centered Vertical Line - using CSS3 gradients */
+/* Only when size > 1200px */
+
+    .vertical-line{
+      /*width: 50%;*/
+      height: 1025px;
+      /*background-color: #fff;
+      border: 2px solid #ccc;*/
+      background-image: -moz-linear-gradient(180deg, transparent, #cccccc, transparent);
+      background-image: -webkit-linear-gradient(180deg, transparent, #cccccc, transparent);
+      background-image: -o-linear-gradient(180deg, transparent, #cccccc, transparent);
+      background-image: linear-gradient(180deg, transparent, #cccccc, transparent);
+      background-position: 50%;
+      background-repeat: repeat-y;
+      background-size: 2px 2px;
+    }
+
+    .vertical-line-edu{
+      /*width: 50%;*/
+      height: 1125px;
+      /*background-color: #fff;
+      border: 2px solid #ccc;*/
+      background-image: -moz-linear-gradient(180deg, transparent, #cccccc, transparent);
+      background-image: -webkit-linear-gradient(180deg, transparent, #cccccc, transparent);
+      background-image: -o-linear-gradient(180deg, transparent, #cccccc, transparent);
+      background-image: linear-gradient(180deg, transparent, #cccccc, transparent);
+      background-position: 50%;
+      background-repeat: repeat-y;
+      background-size: 2px 2px;
+    }
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  /*margin-top: 45px;*/
+  margin-bottom: 75px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 90px;
+  background-color: #3a3f44; /*#f5f5f5; */
+  border-top: solid #272b30 15px; 
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+
+/*************************************/
+/*************************************/
+/**************page header************/
+/*************************************/
+/*************************************/
+
+.header-panel{
+  background-color:#7B8D8E;"
+}
+
+.header-panel-title{
+    font-family: sans-serif;
+    color: rgb(242, 237, 216);
+    font-size:45px; 
+}
+
+.header-panel-title small{
+  color: #EAF555;
+  font-size: 65%;
+}
+
+.header-panel-title-phone{
+    font-family: sans-serif;
+    color: rgb(242, 237, 216);
+    font-size:30px; 
+    text-align: center;
+}
+
+.header-panel-title-phone small{
+  color: #EAF555;
+  font-size: 65%;
+}
+
+
+.header-panel-footer {
+    padding: 10px 15px;
+    /*background-color: #3e444c;*/
+    background-color: #7B8D8E;
+    border-top: 1px solid rgba(0,0,0,0.6);
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.header-panel-footer a{
+  font-size: 16px;
+  color: rgb(242, 237, 216); /*#EAF555;*/
+}
+
+.header-panel-footer a:hover{
+  text-decoration: none;
+  font-size: 16px;
+  color: #5BC0DE; 
+  font-weight: 600;
+  border-bottom: solid 1px;
+  border-bottom-color: #EAF555;
+}
+
+footer a{
+  font-size: 14px;
+  color: rgb(242, 237, 216);  /*#EAF555; */
+}
+
+footer a:hover{
+  text-decoration: none;
+  font-size: 14px;
+  color: #5BC0DE; 
+  font-weight: 600;
+  border-bottom: solid 1px;
+  border-bottom-color: #EAF555;
+}
+
+footer p{
+  margin-bottom: 5px;
+}
+
+footer p.center{
+  text-align: center;
+}
+
+footer .block{
+  margin-top: 15px;
+  border-right: solid 1px white;
+}
+
+footer .block-last{
+  margin-top: 15px;
+}
+
+
+/********about section styles**********/
+
+h3.about , h4.about{
+  margin-top: 0px;
+  text-align: left;
+}
+
+.glyph-green{
+  color: green;
+  padding-right:3px;  
+}
+
+/*tron styles*/
+
+.tron h1, h2
+{
+    text-align: center;
+}
+
+.tron
+{
+    margin-right: 10px;
+    margin-left: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    color: #F2EDD8;
+    background-color: #7B8D8E;
+}
+
+
+.tron p
+{
+    font-size: 1.2em;
+}
+
+.after_section_header
+{
+    margin: 40px 10px 20px;
+    border-bottom: 1px solid #F1A94E;
+}
+
+.after_section_header-col12
+{
+    margin: 40px 0px 20px 0px;
+    border-bottom: 1px solid #F1A94E;
+}
+
+/***********section skill styles*************/
+
+.skills h4
+{
+    margin-left: 15px;
+}
+
+.skills h5
+{
+    margin-left: 30px;
+}
+
+.skills .progress
+{
+    margin-left: 30px;
+}
+
+.second-column
+{
+    margin-top: 72px;
+}
+
+@media screen and (max-width: 500px){
+    .bs-docs-sidebar {
+        display:none
+    }
+}
+
+.fixed {
+    position: fixed;
+}
+
+
+/* sidebar */
+
+.bs-docs-sidebar {
+    /*padding-left: 20px;*/
+    margin-top: -375px;
+    margin-bottom: 20px;
+}
+
+/* all links */
+.bs-docs-sidebar .nav>li>a {
+    /*color: #999*/
+    color:#c8c8c8;
+    border-left: 2px solid transparent;
+    padding: 4px 20px;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+/* nested links */
+.bs-docs-sidebar .nav .nav>li>a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+}
+
+/* active & hover links */
+.bs-docs-sidebar .nav>.active>a, 
+.bs-docs-sidebar .nav>li>a:hover, 
+.bs-docs-sidebar .nav>li>a:focus {
+    color: #5BC0DE; /*color: #563d7c; EAF555 F89406*/
+
+    text-decoration: none;          
+    background-color: transparent;  
+    border-left-color: #EAF555; /*#563d7c; EAF555*/
+}
+/* all active links */
+.bs-docs-sidebar .nav>.active>a, 
+.bs-docs-sidebar .nav>.active:hover>a,
+.bs-docs-sidebar .nav>.active:focus>a {
+    font-weight: 500;
+}
+/* nested active links */
+.bs-docs-sidebar .nav .nav>.active>a, 
+.bs-docs-sidebar .nav .nav>.active:hover>a,
+.bs-docs-sidebar .nav .nav>.active:focus>a {
+    font-weight: 300;
+}
+
+/* hide inactive nested list */
+.bs-docs-sidebar .nav ul.nav {
+    display: none;           
+}
+/* show active nested list */
+.bs-docs-sidebar .nav>.active>ul.nav {
+    display: block;           
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #5BC0DE; /*#ffffff;*/
+  background-color: #272b2e;
+  border-bottom: solid 1px #EAF555 ; 
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #5BC0DE; /*#ffffff;*/
+  background-color: #272b2e;
+  border-bottom: solid 1px #EAF555 ; 
+  /*color: #ffffff;
+  background-color: #272b2e;*/
+}
+
+.back-to-top {
+    /*display: none;*/
+    padding: 4px 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #C8C8C8; /*#999*/
+}
+
+.back-to-top:hover {
+    color: #F89406; /*#563d7c;*/
+    text-decoration: none;
+}
+
+.top-info-data{
+  padding-right: 5px;
+  padding-left: 5px;
+  color: #44B3C2;/* #880e4f #E45641 #F1A94E; E45641*/
+}
+
+.hobby-table{
+  margin-bottom: 20px;
+}
+
+.hobby-table td{
+  padding-top: 2px;
+}
+
+.hobby-table thead tr th{
+  color:white;
+  background-color: #f89406;
+  padding:8px;
+  height: 50px;
+}
+
+.hobby-table thead tr th h3 small{
+  color:#1C1E22;
+  background-color: #f89406;
+  text-shadow: none; 
+}
+
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+}

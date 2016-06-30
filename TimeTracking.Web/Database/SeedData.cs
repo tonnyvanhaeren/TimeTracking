@@ -30,8 +30,8 @@ namespace TimeTracking.Web
                                             Enabled = true};
 
                 _service.AddAppUser(appUser, configuration["Admin:Password"]);
-                _service.AddPolicyToAppUser(appUser, Constants.AppUserPolicyType.Role, "admin");
-                _service.AddPolicyToAppUser(appUser, Constants.AppUserPolicyType.Role, "employee");
+                _service.AddPolicyToAppUser(appUser, Constants.AppUserPolicyType.Role, Constants.AppUserPolicyRole.Admin);
+                _service.AddPolicyToAppUser(appUser, Constants.AppUserPolicyType.Role, Constants.AppUserPolicyRole.Employee);
             }
 
             var retUser = _service.GetAppUserByEmail(configuration["Admin:Email"]);

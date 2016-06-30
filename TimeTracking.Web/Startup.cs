@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +18,9 @@ using TimeTracking.Web.Config;
 using TimeTracking.Web.Helpers;
 using TimeTracking.Web.Services;
 using TimeTracking.Web.Services.Interfaces;
+using System;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace TimeTracking.Web
 {
@@ -51,11 +57,7 @@ namespace TimeTracking.Web
                 )
             );
 
-
-            //services.AddTransient<PasswordHasher>();
             services.AddScoped<PostGreSqlDbContext>();
-            //services.AddTransient<IPostGreSqlService, PostGreSqlService>();
-
 
             //sync config json files with config classes
             services.Configure<MailConfig>(Configuration.GetSection("Mail"));
@@ -70,7 +72,6 @@ namespace TimeTracking.Web
             services.AddTransient<ConfirmationToken>();
             services.AddTransient<FlashMessage>();
 
-
             services.AddSession();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -78,11 +79,6 @@ namespace TimeTracking.Web
             // Use this section if you want to leverage session.
             services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Session);
             services.AddScoped<IMessageProvider, SessionMessageProvider>();
-
-            // Use this section if you want to leverage cookies.
-            //services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.Cookies);
-            //services.AddScoped(x => x.GetRequiredService<IHttpContextAccessor>().HttpContext.Response.Cookies);
-            //services.AddScoped<IMessageProvider, CookieMessageProvider>();
 
             services.AddScoped<IMessageTypes>(x =>
             {
@@ -92,8 +88,19 @@ namespace TimeTracking.Web
             services.AddScoped<IMessengerOptions, MessengerOptions>();
             services.AddScoped<IMessenger, StackMessenger>();
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdministratorOnly", policy => policy.RequireRole(General.Constants.AppUserPolicyRole.Admin));
+                options.AddPolicy("EmployeeOnly", policy => policy.RequireRole(General.Constants.AppUserPolicyRole.Employee));
+            });
+
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(config => { 
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,7 +112,7 @@ namespace TimeTracking.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
             }
             else
             {
@@ -128,18 +135,10 @@ namespace TimeTracking.Web
 
             app.UseSession();
 
-
             app.UseCookieAuthentication(new CookieAuthenticationOptions {
                 AuthenticationScheme = "cookies",
-                AutomaticAuthenticate = true
-
+                AutomaticAuthenticate = true,
             });
-
-            //options =>
-            //{
-            //    options.AuthenticationScheme = "cookies";
-            //    options.AutomaticAuthenticate = true;
-            //});
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -152,30 +151,54 @@ namespace TimeTracking.Web
                 ClientId = "mvc_implicit",
                 ResponseType = "id_token token" , // OpenIdConnectResponseTypes.IdToken,  "id_token token" 
                 TokenValidationParameters = {  NameClaimType = "name", RoleClaimType = "role" },
-                Scope = { "email", "roles", "api1" },
+                Scope = { "email", "roles", "timeTrackingAPI" },
+                SaveTokens = true,
+
+                Events = new OpenIdConnectEvents()
+                {
+                    //when a principal is authenticated but has no access to resources (page) redirect to a forbidden page
+                    OnRedirectToIdentityProvider = (context) => {
+                        if (context.HttpContext.User.Identity.IsAuthenticated)
+                        {
+                            context.HandleResponse();
+                            context.HttpContext.Response.Redirect(Uri.EscapeUriString(General.Constants.MvcClient.ClientForbiddenUrl));
+                        }
+                        return Task.FromResult(0);
+                    },
+
+                    
+                    OnTicketReceived = context =>
+                    {
+                        // Get the ClaimsIdentity
+                        var identity = context.Principal.Identity as ClaimsIdentity;
+                        if (identity != null)
+                        {
+                            // Save the tokens as Claims. If you do not want to do this then set SaveTokens above to false, and also comment out this code
+                            if (context.Properties.Items.ContainsKey(".TokenNames"))
+                            {
+                                string[] tokenNames = context.Properties.Items[".TokenNames"].Split(';');
+
+                                foreach (string tokenName in tokenNames)
+                                {
+                                    string tokenValue = context.Properties.Items[$".Token.{tokenName}"];
+
+                                    if (!identity.HasClaim(c => c.Type == tokenName))
+                                        identity.AddClaim(new System.Security.Claims.Claim(tokenName, tokenValue));
+                                }
+                            }
+
+                            // Add the Name ClaimType. This is required if we want User.Identity.Name to actually return something!
+                            if (!context.Principal.HasClaim(c => c.Type == ClaimTypes.Name) &&
+                                identity.HasClaim(c => c.Type == "name"))
+                                identity.AddClaim(new System.Security.Claims.Claim(ClaimTypes.Name, identity.FindFirst("name").Value));
+                        }
+
+
+                        return Task.FromResult(0);
+                    },
+                }
             });
-            
-            
-            //options =>
-            //{
-            //    options.AuthenticationScheme = "oidc";
-            //    options.SignInScheme = "cookies";
-            //    options.AutomaticChallenge = true;
 
-            //    options.Authority = "http://localhost:22530/";
-            //    options.RequireHttpsMetadata = false;
-
-            //    options.ClientId = "mvc_implicit";
-            //    options.ResponseType = "id_token token";
-
-            //    //options.Scope.Add("profile");
-            //    options.Scope.Add("email");
-            //    options.Scope.Add("roles");
-            //    options.Scope.Add("api1");
-
-            //    options.TokenValidationParameters.NameClaimType = "name";
-            //    options.TokenValidationParameters.RoleClaimType = "role";
-            //});
 
 
             app.UseMvc(routes =>

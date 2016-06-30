@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IdentityModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TimeTracking.DataAccess.Interfaces;
 using TimeTracking.General;
@@ -29,13 +31,13 @@ namespace TimeTracking.Web.Controllers
             _flash = flash;
         }
 
-        [Authorize]
+        //[Authorize]
         public IActionResult Login()
         {
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<IActionResult> LogOff()
         {
@@ -43,6 +45,14 @@ namespace TimeTracking.Web.Controllers
             return Redirect(General.Constants.Idsrv.IdSrvLogOutUrl + $"?returnUrl={General.Constants.MvcClient.ClientUrlLogOffEndPoint}"); //go to indentity server logout
         }
 
+
+        [AllowAnonymous]
+        public IActionResult Forbidden()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
         public IActionResult LogOffMsg()
         {
             //show flashmessage
@@ -53,12 +63,12 @@ namespace TimeTracking.Web.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
+            var email = User.Claims.Where(c => c.Type == JwtClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
 
-            //AppUser user = _service.GetAppUserByEmail("antonius.vanhaeren.av@gmail.com");
-
-            AppUser user = _service.GetAppUserByEmail("antonius.vanhaeren.av@gmail.com");
+            AppUser user = _service.GetAppUserByEmail(email);
             List<AppUserPolicy> policies = _service.GetAllAppUserPolicies(user.Subject);
             AppUserViewModelView vmv = new AppUserViewModelView(user, policies);
+
             return View(vmv);
         }
 
@@ -137,7 +147,8 @@ namespace TimeTracking.Web.Controllers
             }
 
 
-            //set field EmailConfirmed = true for the user in database
+            // set field EmailConfirmed, Enabed = true for the user in database
+            // add Policy employee to user
             us.EmailConfirmed = true;
             us.Enabled = true;
             _service.UpdateAppUser(us);

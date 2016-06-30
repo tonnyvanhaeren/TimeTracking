@@ -10,8 +10,10 @@ namespace TimeTracking.General
         public static class MvcClient
         {
             public const string ClientUrl = "http://localhost:50000";
-            public const string ClientUrlLogOffEndPoint = "http://localhost:50000/Account/logOffMsg";
-            public const string ClientEndPoint = "http://localhost:50000/signin-oidc";
+            public const string ClientUrlLogOffEndPoint = ClientUrl + "/Account/logOffMsg";
+            public const string ClientUrlRegisterEndPoint = ClientUrl + "/Account/Register";
+            public const string ClientEndPoint = ClientUrl + "/signin-oidc";
+            public const string ClientForbiddenUrl = "/Account/Forbidden/";
         }
 
         public static class Idsrv
@@ -25,6 +27,12 @@ namespace TimeTracking.General
         {
             public const string Role = "role";
             public const string Regular = "regular";
+        }
+
+        public static class AppUserPolicyRole
+        {
+            public const string Admin = "admin";
+            public const string Employee = "employee";
         }
 
         public static class RoutePaths

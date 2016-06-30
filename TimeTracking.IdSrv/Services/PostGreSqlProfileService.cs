@@ -2,11 +2,8 @@
 using IdentityServer4.Core.Services;
 using IdentityServer4.Core.Extensions;
 using System.Threading.Tasks;
-
-
 using System.Collections.Generic;
 using System.Security.Claims;
-
 using IdentityModel;
 
 

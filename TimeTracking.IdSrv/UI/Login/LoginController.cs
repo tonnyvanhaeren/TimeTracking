@@ -1,11 +1,8 @@
 ﻿using IdentityModel;
 using IdentityServer4.Core;
 using IdentityServer4.Core.Services;
-using IdentityServer4.Core.Services.InMemory;
-using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TimeTracking.General.Models;

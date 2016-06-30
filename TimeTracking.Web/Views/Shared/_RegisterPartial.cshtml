@@ -1,17 +1,29 @@
 ﻿@using System.Security.Claims
+@using TimeTracking.Web.Helpers
+@using TimeTracking.General
 
 @if (User.Identity.IsAuthenticated)
 {
     <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-controller="Account" asp-action="Index" title="Manage">Hello @User.Identity.Name</a>
-            </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log off</button>
-            </li>
+            <li><a asp-controller="Account" asp-action="Index" title="Manage">Hello @User.Identity.Name</a></li>
+
+            @if (CheckUserRolePolicies.HasRolePolicy(User, Constants.AppUserPolicyRole.Admin))
+            {
+                <li><a asp-controller="AdminAccount" asp-action="Index">Admin Page</a></li>
+            }
+
+            @if (CheckUserRolePolicies.HasRolePolicy(User, Constants.AppUserPolicyRole.Employee))
+            {
+                <li><a asp-controller="Employee" asp-action="Index">Employee Page</a></li>
+            }
+
+
+
+            <li><button type="submit" class="btn btn-link navbar-btn navbar-link">Log off</button></li>
         </ul>
     </form>
+    
 }
 else
 {
@@ -20,3 +32,5 @@ else
         <li><a asp-controller="Account" asp-action="Login">Log in</a></li>
     </ul>
 }
+
+

@@ -84,6 +84,7 @@ namespace TimeTracking.IdSrv.configuration {
 
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
+                    RequireConsent = false,
                     RedirectUris = new List<string>
                     {
                         //"hhhh://localhost:3105/signin-oidc" // localhost:ipadress/signin-oidc
@@ -97,7 +98,7 @@ namespace TimeTracking.IdSrv.configuration {
                         StandardScopes.Email.Name,
                         StandardScopes.Roles.Name,
 
-                        "api1", "api2"
+                       "timeTrackingAPI"
                     },
                 },
 
