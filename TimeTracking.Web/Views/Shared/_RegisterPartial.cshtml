@@ -6,7 +6,7 @@
 {
     <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
-            <li><a asp-controller="Account" asp-action="Index" title="Manage">Hello @User.Identity.Name</a></li>
+            <li><a asp-controller="Account" asp-action="UserInfo" title="Manage">Hello @User.Identity.Name</a></li>
 
             @if (CheckUserRolePolicies.HasRolePolicy(User, Constants.AppUserPolicyRole.Admin))
             {

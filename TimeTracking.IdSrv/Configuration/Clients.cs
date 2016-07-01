@@ -98,7 +98,7 @@ namespace TimeTracking.IdSrv.configuration {
                         StandardScopes.Email.Name,
                         StandardScopes.Roles.Name,
 
-                       "timeTrackingAPI"
+                        General.Constants.Idsrv.ScopeTimeTrackingRecords
                     },
                 },
 

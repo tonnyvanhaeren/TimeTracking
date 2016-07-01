@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace TimeTracking.Web
+namespace TimeTracking.Api
 {
     public class Program
     {

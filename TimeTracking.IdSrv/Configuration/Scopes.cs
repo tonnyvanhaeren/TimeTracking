@@ -23,7 +23,11 @@ namespace TimeTracking.IdSrv.configuration
                     {
                         new Secret("secret".Sha256()) //todo: created secret
                     },
-                    
+                    Claims = new List<ScopeClaim>
+                    {
+                        new ScopeClaim("role"),
+                        new ScopeClaim(General.Constants.Idsrv.ScopeTimeTrackingRecords)
+                    }
                 },
 
                 new Scope

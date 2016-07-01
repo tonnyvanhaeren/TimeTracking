@@ -60,6 +60,17 @@ namespace TimeTracking.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult UserInfo()
+        {
+            var email = User.Claims.Where(c => c.Type == JwtClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
+
+            AppUser user = _service.GetAppUserByEmail(email);
+            List<AppUserPolicy> policies = _service.GetAllAppUserPolicies(user.Subject);
+            AppUserViewModelView vmv = new AppUserViewModelView(user, policies);
+
+            return View(vmv);
+        }
+
         // GET: /<controller>/
         public IActionResult Index()
         {

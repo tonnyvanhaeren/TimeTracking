@@ -16,12 +16,20 @@ namespace TimeTracking.General
             public const string ClientForbiddenUrl = "/Account/Forbidden/";
         }
 
+        public static class ApiClient
+        {
+            public const string ApiUrl = "http://localhost:50500";
+            public const string ApiUrlIdentityEndPoint = ApiUrl + "/api/identity";
+
+        }
+
         public static class Idsrv
         {
             public const string IdSrvUrl = "http://localhost:60000/";
+            public const string IdSrvEndResourcesEndPoint = IdSrvUrl + "resources";
             public const string IdSrvLogOutUrl = IdSrvUrl + "ui/ExternalLogOut";
+            public const string ScopeTimeTrackingRecords = "timeTrackingRecords";
         }
-
 
         public static class AppUserPolicyType
         {
@@ -33,6 +41,10 @@ namespace TimeTracking.General
         {
             public const string Admin = "admin";
             public const string Employee = "employee";
+            public const string TimeTrackingAdmin = "timeTracking.admin";
+            public const string TimeTrackingEmployee = "timeTracking.employee";
+
+
         }
 
         public static class RoutePaths

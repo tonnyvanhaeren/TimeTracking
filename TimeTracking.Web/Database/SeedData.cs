@@ -31,7 +31,9 @@ namespace TimeTracking.Web
 
                 _service.AddAppUser(appUser, configuration["Admin:Password"]);
                 _service.AddPolicyToAppUser(appUser, Constants.AppUserPolicyType.Role, Constants.AppUserPolicyRole.Admin);
+                _service.AddPolicyToAppUser(appUser, Constants.AppUserPolicyType.Role, Constants.AppUserPolicyRole.TimeTrackingAdmin);
                 _service.AddPolicyToAppUser(appUser, Constants.AppUserPolicyType.Role, Constants.AppUserPolicyRole.Employee);
+                _service.AddPolicyToAppUser(appUser, Constants.AppUserPolicyType.Role, Constants.AppUserPolicyRole.TimeTrackingEmployee);
             }
 
             var retUser = _service.GetAppUserByEmail(configuration["Admin:Email"]);

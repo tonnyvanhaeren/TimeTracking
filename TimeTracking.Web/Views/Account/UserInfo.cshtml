@@ -1,0 +1,54 @@
+﻿@model TimeTracking.Web.Views.Account.AppUserViewModelView
+
+@{
+    ViewData["Title"] = "User Information";
+}
+
+<h2 class="text-info">@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-sm-6">
+        <h4 class="text-warning">User Info</h4>
+        <table class="table table-striped">
+            <tr>
+                <th>Given Name</th>
+                <th>Family Name</th>
+                <th>Email</th>
+                <th>&nbsp;</th>
+            </tr>
+            <tr>
+                <td>
+                    @Model.AppUser.GivenName
+                </td>
+                <td>
+                    @Model.AppUser.FamilyName
+                </td>
+                <td>
+                    @Model.AppUser.Email
+                </td>
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@model. item.Subject">ULT</a> |
+                        <a asp-action="Details" asp-route-id="@item.Subject">ULT</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Subject">ULT</a>*@
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-sm-4 col-sm-offset-2">
+        <h4 class="text-warning">User Policies</h4>
+        <table class="table table-striped">
+            <tr>
+                <th>Type</th>
+                <th>Name</th>
+            </tr>
+            @foreach (var policy in Model.AppUserPolicies)
+            {
+                <tr>
+                    <td>@policy.Type</td>
+                    <td>@policy.Name</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
