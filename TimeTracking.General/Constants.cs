@@ -9,17 +9,17 @@ namespace TimeTracking.General
     {
         public static class MvcClient
         {
-            public const string ClientUrl = "http://localhost:50000";
-            public const string ClientUrlLogOffEndPoint = ClientUrl + "/Account/logOffMsg";
-            public const string ClientUrlRegisterEndPoint = ClientUrl + "/Account/Register";
-            public const string ClientEndPoint = ClientUrl + "/signin-oidc";
-            public const string ClientForbiddenUrl = "/Account/Forbidden/";
+            public const string ClientUrl = "http://localhost:50000/";
+            public const string ClientUrlLogOffEndPoint = ClientUrl + "Account/logOffMsg";
+            public const string ClientUrlRegisterEndPoint = ClientUrl + "Account/Register";
+            public const string ClientEndPoint = ClientUrl + "signin-oidc";
+            public const string ClientForbiddenUrl = "Account/Forbidden/";
         }
 
         public static class ApiClient
         {
-            public const string ApiUrl = "http://localhost:50500";
-            public const string ApiUrlIdentityEndPoint = ApiUrl + "/api/identity";
+            public const string ApiUrl = "http://localhost:50500/";
+            public const string ApiUrlIdentityEndPoint = ApiUrl + "api/identity";
 
         }
 
@@ -28,7 +28,7 @@ namespace TimeTracking.General
             public const string IdSrvUrl = "http://localhost:60000/";
             public const string IdSrvEndResourcesEndPoint = IdSrvUrl + "resources";
             public const string IdSrvLogOutUrl = IdSrvUrl + "ui/ExternalLogOut";
-            public const string ScopeTimeTrackingRecords = "timeTrackingRecords";
+            public const string ScopeTimeTrackingRecords = "timeTrackingAPI";
         }
 
         public static class AppUserPolicyType

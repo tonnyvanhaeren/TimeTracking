@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
+// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TimeTracking.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class IdentityController : Controller
     {
-        // GET api/values
-        [AllowAnonymous]
+           
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            //User.Claims;
+
+            //return new JsonResult("okokok");
+            return new JsonResult(User.Claims.Select(c => new { c.Type, c.Value }));
         }
 
         // GET api/values/5

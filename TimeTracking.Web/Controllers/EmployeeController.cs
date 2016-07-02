@@ -31,8 +31,9 @@ namespace TimeTracking.Web.Controllers
             var client = new HttpClient();
             client.SetBearerToken(token);
 
-            var response = await client.GetStringAsync(General.Constants.ApiClient.ApiUrlIdentityEndPoint);
-            ViewBag.Json = JArray.Parse(response).ToString();
+            var response1 = await client.GetStringAsync(General.Constants.ApiClient.ApiUrlIdentityEndPoint);
+            var response = await client.GetStringAsync(General.Constants.ApiClient.ApiUrl + "api/values");
+            ViewBag.Json = JArray.Parse(response1).ToString();
 
             return View();
         }
