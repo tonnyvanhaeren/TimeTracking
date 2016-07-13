@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
-using Microsoft.DotNet.Cli.Utils;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using TimeTracking.Web.Helpers;
+using TimeTracking.Web.Models;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,17 +23,28 @@ namespace TimeTracking.Web.Controllers
 
         public async Task<IActionResult> Test()
         {
-            var cp = (ClaimsPrincipal)User;
-            var token = cp.FindFirst("access_token")?.Value;
+            ClaimsPrincipal cp = User;
+            HttpClient client = TimeTrackingAPIClient.GetClient(cp, true);
 
-            var client = new HttpClient();
-            client.SetBearerToken(token);
+            //var response0 = await client.GetStringAsync(General.Constants.ApiClient.ApiUrlIdentityEndPoint);
+            //var response = await client.GetStringAsync(General.Constants.ApiClient.ApiUrl + "api/values");
 
-            var response1 = await client.GetStringAsync(General.Constants.ApiClient.ApiUrlIdentityEndPoint);
-            var response = await client.GetStringAsync(General.Constants.ApiClient.ApiUrl + "api/values");
-            ViewBag.Json = JArray.Parse(response1).ToString();
+            HttpResponseMessage response = await client.GetAsync(General.Constants.ApiClient.ApiUrlIdentityEndPoint);
 
-            return View();
+            if (response.IsSuccessStatusCode)
+            {
+                string ret = await response.Content.ReadAsStringAsync();
+                ViewBag.Json = JArray.Parse(ret);
+                return View();
+            }
+            else
+            {
+                ErrorView mv = new ErrorView();
+                mv.Error = response.StatusCode.ToString();
+                mv.Msg = $"Response From TimeTracking API => Access Denied for User : {cp.Identity.Name}";
+
+                return View("Error", mv);
+            }
         }
     }
 }

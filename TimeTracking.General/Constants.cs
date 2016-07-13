@@ -12,6 +12,8 @@ namespace TimeTracking.General
             public const string ClientUrl = "http://localhost:50000/";
             public const string ClientUrlLogOffEndPoint = ClientUrl + "Account/logOffMsg";
             public const string ClientUrlRegisterEndPoint = ClientUrl + "Account/Register";
+            public const string ClientUrlForgotPasswordEndPoint = ClientUrl + "Account/ForgotPassword";
+            public const string ClientUrlResetPasswordEndPoint = ClientUrl + "Account/ResetPassword";
             public const string ClientEndPoint = ClientUrl + "signin-oidc";
             public const string ClientForbiddenUrl = "Account/Forbidden/";
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 
@@ -11,6 +12,7 @@ namespace TimeTracking.Api.Controllers
     {
            
         [HttpGet]
+        [Authorize(Policy = "OnlyTimeTrackingAdmin")]
         public ActionResult Get()
         {
             //User.Claims;

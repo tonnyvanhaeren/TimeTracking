@@ -103,6 +103,7 @@ namespace TimeTracking.Api
                 // required if you want to return a 403 and not a 401 for forbidden responses
                 AutomaticChallenge = true,
                 RequireHttpsMetadata = false
+                
             };
 
             app.UseJwtBearerAuthentication(jwtBearerOptions);
