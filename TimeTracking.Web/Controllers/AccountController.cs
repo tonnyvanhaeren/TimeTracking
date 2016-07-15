@@ -172,6 +172,37 @@ namespace TimeTracking.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult ForgotPassword(ForgotPasswordViewModel model)
+        {
+            AppUser checkMailUser = _service.GetAppUserByEmail(model.Email);
+
+            if (ModelState.IsValid)
+            {
+                //check mail exists
+                if (checkMailUser != null)
+                {
+
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Email unknown !");
+                    return View(model);
+                }
+            }
+
+            return View(model);
+        }
+
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
